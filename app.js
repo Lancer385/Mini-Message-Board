@@ -1,15 +1,13 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
+const express = require('express');
+const path = require("node:path");
+const createError = require('http-errors');
+const indexRouter = require('./routes/index');
+const app = express();
+const PORT = process.env.PORT || 8000;
 
-var indexRouter = require('./routes/index');
-
-var app = express();
-
-app.set('views', path.join(__dirname, 'views'));
+app.set("views", path.join(__dirname, "views"));
 app.set('view engine', 'ejs');
-
-
+app.use(express.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 
 app.use(function(req, res, next) {
@@ -21,6 +19,11 @@ app.use(function(err, req, res, next) {
   res.render('error', {message: err.message, error: err});
 });
 
-app.listen(8000)
+app.listen(PORT, (error) => {
+    if (error) {
+    throw error;
+  }
+  console.log(`listening to port ${PORT}`)
+})
 
 module.exports = app;

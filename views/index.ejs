@@ -3,9 +3,7 @@
   <head><title><%= title %></title></head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <ul>
-      <%- include('messages', {messages: messages}) %>
-    </ul>
+    <%- include('messages', {messages: messages}) %>
+    <button><a href="/new" style="color: inherit; text-decoration: none;">Create a new message</a></button>
   </body>
 </html>
