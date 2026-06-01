@@ -39,10 +39,11 @@ exports.sendMessagePost = [
 }]
 
 exports.messageDetailsGet =  async (req, res, next) => {
-  const [message] = await db.viewMessageDetails(req.params.id)
-      if (message.length !== 0){
-        console.log('username', message.username)
-        res.render("message", {message: message})
+  const rows = await db.viewMessageDetails(req.params.id)
+      if (rows.length !== 0){
+
+        console.log('username', rows[0].username)
+        res.render("message", {message: rows[0]})
         return;
       }
     next(createError(404))
