@@ -1,4 +1,6 @@
+require('dotenv').config();
 const express = require('express');
+const { format } = require('date-fns');
 const path = require("node:path");
 const { body, validationResult } = require("express-validator");
 const createError = require('http-errors');
@@ -17,7 +19,7 @@ app.use(function(req, res, next) {
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('partials/errorStatus', {message: err.message, error: err});
+  res.render('errorStatus', {message: err.message, error: err});
 });
 
 app.listen(PORT, (error) => {

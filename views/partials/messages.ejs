@@ -1,0 +1,8 @@
+<% for (let message of messages) { %>
+    <ul>
+        <li><span>Username: <%= message.username%> </span></li>
+        <li><span>Message: <%= message.message%></span></li>
+        <li><span>Date posted: <%= format(message.posted, 'dd/MM/yyyy hh:mm')%></span></li>
+    </ul>  
+    <button><a href="/message/<%= message.id %>" style="color: inherit; text-decoration: none;">Open</a></button>
+  <% }%>

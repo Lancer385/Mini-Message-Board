@@ -8,9 +8,11 @@
   "dependencies": {
     "date-fns": "^4.3.0",
     "debug": "~2.6.9",
+    "dotenv": "^17.4.2",
     "ejs": "^5.0.2",
     "express": "^4.22.2",
     "express-validator": "^7.3.2",
-    "http-errors": "^2.0.1"
+    "http-errors": "^2.0.1",
+    "pg": "^8.21.0"
   }
 }

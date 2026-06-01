@@ -1,35 +1,13 @@
 const { body, validationResult, matchedData } = require("express-validator");
-const {format} = require("date-fns");
-
-function createNewDate(){
-  return format(new Date(), 'dd/MM/yyyy hh:mm');
-}
-const messages = [
-  {
-    id: 0,
-    text: "hello?",
-    user: "lancer",
-    date: createNewDate()
-  },
-
-  {
-    id: 1 ,
-    text: "hiiiiiii",
-    user: "radish",
-    date: createNewDate()
-  }
-
-]
-
-
+const { format } = require('date-fns');
+const createError = require('http-errors');
+const db = require("../db/queries");
 
 const validateUser = [
   body("name")
     .trim()
     .notEmpty()
-    .withMessage("Name can not be empty.")
-    .isAlpha()
-    .withMessage("Name must only contain alphabet letters."),  
+    .withMessage("Name can not be empty."), 
   body("message")
   .trim()
   .notEmpty()
@@ -37,8 +15,9 @@ const validateUser = [
   .isLength({min: 20, max: 200}).withMessage("Message must be between 20 and 200 characters")
 ];
 
-exports.messageListGet = (req, res) => {
-  res.render('index', { title: 'Message Board' , messages: messages});
+exports.messageListGet = async (req, res) => {
+  const messages = await db.getAllMessages();
+  res.render('index', { title: 'Message Board' , messages: messages, format: format});
 };
 exports. sendMessageGet = (req, res) => {
   res.render('sendMessage');
@@ -46,7 +25,7 @@ exports. sendMessageGet = (req, res) => {
 
 exports.sendMessagePost = [
   validateUser,
-  (req, res) => {
+  async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).render("sendMessage", {
@@ -55,16 +34,17 @@ exports.sendMessagePost = [
     });
   }
   const {name, message} = matchedData(req);
-  messages.push({id: messages.length, text: message, user: name, date: new Date()});
+  await db.sendMessage(name, message);
   res.redirect('/');
 }]
 
-exports.messageDetailsGet = (req, res, next) => {
-    for (let message of messages){
-      if (message.id === Number(req.params.id)){
+exports.messageDetailsGet =  async (req, res, next) => {
+  const [message] = await db.viewMessageDetails(req.params.id)
+      if (message.length !== 0){
+        console.log('username', message.username)
         res.render("message", {message: message})
         return;
       }
-    }
     next(createError(404))
-  };
+    }
+  ;
