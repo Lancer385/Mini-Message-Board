@@ -1,7 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
+const { messageListGet, sendMessageGet, sendMessagePost, messageDetailsGet } = require('../controllers/userController');
 const router = express.Router();
-
 
 const messages = [
   {
@@ -21,29 +21,12 @@ const messages = [
 ]
 
 
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Message Board' , messages: messages});
-});
+router.get('/', messageListGet);
 
-router.get('/new', function(req, res) {
-  res.render('form');
-});
+router.get('/new', sendMessageGet);
 
-router.post('/new', function(req, res) {
-    const {name, message} = req.body
-    messages.push({id: messages.length, text: message, user: name, date: new Date()})
+router.post('/new', sendMessagePost);
 
-  res.redirect('/');
-});
-
-router.get('/message/:id', (req, res, next) => {
-    for (let message of messages){
-      if (message.id === Number(req.params.id)){
-        res.render("message", {message: message})
-        return;
-      }
-    }
-    next(createError(404))
-})
+router.get('/message/:id', messageDetailsGet )
 
 module.exports = router;

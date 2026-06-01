@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require("node:path");
+const { body, validationResult } = require("express-validator");
 const createError = require('http-errors');
 const indexRouter = require('./routes/index');
 const app = express();
@@ -16,7 +17,7 @@ app.use(function(req, res, next) {
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {message: err.message, error: err});
+  res.render('partials/errorStatus', {message: err.message, error: err});
 });
 
 app.listen(PORT, (error) => {
